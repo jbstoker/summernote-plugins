@@ -7,4 +7,4 @@ A plugin to add a dropdown menu for adding emoji images with just a few clicks. 
 I have only added my favorite emojis, though using my conversion tool at http://justineldracher.github.io/image-converter.html you can easily add your own.
 
 ##summernote-ext-specialchars
-Just a few tweaks I made to the official SpecialChars plugin to suit my own taste.
+Just a few tweaks I made to the official SpecialChars plugin to suit my own taste and make it more mobile-friendly.
