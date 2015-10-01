@@ -204,10 +204,10 @@
    * @return {jQuery}
    */
   var makeSpecialCharSetTable = function () {
-    var $table = $("<div/>");
+    var $table = $("<div/>").attr("id", "specialCharTable");
 	$.each(specialCharDataSet, function (idx, text) {
 		var $block = $("<span/>").attr("style", "border:1px solid black;display:inline-block;height:50px;width:35px;text-align:center;font-size:14pt;color:black;padding-top:10px;cursor:pointer;")
-			.addClass("note-specialchar-node").attr("title", text).attr("id", "char-" + idx);
+			.addClass("note-specialchar-node char-" + idx).attr("title", text).attr("id", "char-" + idx);
 		$block.append(text);
 		$table.append($block);
 	});
@@ -264,22 +264,38 @@
 
       function arrowKeyHandler(keyCode) {
         // left, right, up, down key
-        var $nextNode;
-        var lastRowColumnLength = $specialCharNode.length % totalColumn;
+        var w = $("#specialCharTable").css("width") + "";
+		w = w.substr(0, w.length - 2);
+		var cols = Math.floor(w / 35);
+		pos = parseInt(pos);
 
         if (KEY.LEFT === keyCode) {
 			if (pos > 0) {
 				pos--;
-				$specialCharNode.css("border", "1px solid black").css("background-color", "white").removeClass("active");
-				$("#char-" + pos).css("border", "1px solid blue").css("background-color", "aliceblue").addClass("active");
-				$selectedNode = $("#char-" + pos);
+				clear();
+				$(".char-" + pos).css("border", "1px solid blue").css("background-color", "aliceblue");
+				$selectedNode = $(".char-" + pos);
 			}
         } else if (KEY.RIGHT === keyCode) {
-			if (pos < end) {
+			if (pos < end - 1) {
 				pos++;
-				$specialCharNode.css("border", "1px solid black").css("background-color", "white").removeClass("active");
-				$("#char-" + pos).css("border", "1px solid blue").css("background-color", "aliceblue").addClass("active");
-				$selectedNode = $("#char-" + pos);
+				clear();
+				$(".char-" + pos).css("border", "1px solid blue").css("background-color", "aliceblue");
+				$selectedNode = $(".char-" + pos);
+			}
+		} else if (KEY.UP === keyCode) {
+			if (pos - cols >= 0) {
+				clear();
+				pos = pos - cols;
+				$(".char-" + pos).css("border", "1px solid blue").css("background-color", "aliceblue");
+				$selectedNode = $(".char-" + pos);
+			}
+		} else if (KEY.DOWN === keyCode) {
+			if (pos + cols <= end) {
+				clear();
+				pos = pos + cols;
+				$(".char-" + pos).css("border", "1px solid blue").css("background-color", "aliceblue");
+				$selectedNode = $(".char-" + pos);
 			}
 		}
 	  }
@@ -288,7 +304,8 @@
         if (!$selectedNode) {
           return;
         }
-
+		
+		pos = 0;
         deferred.resolve(decodeURIComponent($selectedNode.attr("title")));
         $specialCharDialog.modal('hide');
       }
@@ -297,19 +314,13 @@
         event.preventDefault();
         var keyCode = event.keyCode;
         if (keyCode === undefined || keyCode === null) {
-          return;
+			return;
         }
         // check arrowKeys match
         if (ARROW_KEYS.indexOf(keyCode) > -1) {
-          /*if ($selectedNode === null) {
-            addActiveClass($specialCharNode.eq(0));
-            currentColumn = 1;
-            currentRow = 1;
-            return;
-          }*/
-          arrowKeyHandler(keyCode);
+			arrowKeyHandler(keyCode);
         } else if (keyCode === ENTER_KEY) {
-          enterKeyHandler();
+			enterKeyHandler();
         }
         return false;
       }
@@ -332,19 +343,19 @@
         $(document).on('keydown', keyDownEventHandler);
         $specialCharNode.on('click', function (event) {
           event.preventDefault();
+		  pos = 0;
           deferred.resolve(decodeURIComponent(event.currentTarget.title));
           $specialCharDialog.modal('hide');
         });
 		$specialCharNode.mouseenter(function() {
-			$specialCharNode.css("border", "1px solid black").css("background-color", "white");
+			clear();
 			$(this).css("border", "1px solid blue").css("background-color", "aliceblue");
 			$selectedNode = $(this);
 			var thisid = $(this).attr("id") + "";
 			pos = thisid.substr(5);
 		});
 		$specialCharNode.mouseleave(function() {
-			$specialCharNode.css("border", "1px solid black").css("background-color", "white");
-			$selectedNode = null;
+			clear();
 		});
       }).one('hidden.bs.modal', function () {
         $specialCharNode.off('click');
@@ -363,6 +374,11 @@
 
       // $editable blur
       $editable.blur();
+	  
+	  function clear() {
+		  $specialCharNode.css("border", "1px solid black").css("background-color", "white");
+		  $selectedNode = null;
+	  }
     });
   };
 
