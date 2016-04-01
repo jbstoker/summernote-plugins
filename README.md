@@ -13,4 +13,4 @@ Just a few tweaks I made to the official SpecialChars plugin to suit my own tast
 
 ##summernote-fontawesome
 Basically my special characters plugin, just with Font Awesome icons instead of special characters.
-Features a search field to easily find icons, so it's a good reference tool if nothing else. ;)
+Features a search field to easily find icons, so it's a good reference tool if nothing else. :wink:
