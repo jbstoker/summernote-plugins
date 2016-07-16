@@ -85,7 +85,7 @@
             };
 
             function addimg(value) {
-                var img = $('<iframe frameborder="0" class="' + value + ' twa-2x"></iframe>');
+                var img = $('<iframe frameborder="0" class="' + value + '"></iframe>');
                 context.invoke("editor.insertNode", img[0]);
             }
         }
