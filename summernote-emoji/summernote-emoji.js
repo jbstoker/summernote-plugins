@@ -42,10 +42,13 @@
                 var $emojiList = ui.buttonGroup([
                     ui.button({
                         className: 'dropdown-toggle',
-                        contents: '<span class="fa fa-smile-o"></span> <span class="caret"></span>',
+                        contents: '<span class="twa twa-smile"></span> <span class="caret"></span>',
                         tooltip: "Insert Emojis",
                         data: {
                             toggle: 'dropdown'
+                        },
+                        click: function () {
+                            context.invoke('editor.saveRange');
                         }
                     }),
                     ui.dropdown({
@@ -86,6 +89,8 @@
 
             function addimg(value) {
                 var img = $('<iframe frameborder="0" class="' + value + '"></iframe>');
+                context.invoke('editor.restoreRange');
+                context.invoke('editor.focus');
                 context.invoke("editor.insertNode", img[0]);
             }
         }
